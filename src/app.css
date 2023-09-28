@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800;900;1000&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+	@apply w-1 max-sm:hidden transition-all;
+}
+::-webkit-scrollbar-track {
+	@apply bg-neutral-100;
+}
+::-webkit-scrollbar-thumb {
+	@apply bg-neutral-400 hover:bg-neutral-500;
+}
+::selection {
+	@apply text-primary-100 bg-primary-600;
+}
+
+* {
+	scroll-behavior: smooth;
+}
+
+body {
+	@apply overflow-x-hidden text-neutral-800 bg-neutral-100;
+}
+[class^='button-']:not(.no-scale), button:not(.no-scale), a:not(.no-scale) {
+	@apply active:scale-95 transition-all duration-200;
+}
+.button-primary {
+	@apply inline-flex items-center justify-center px-5 py-2 sm:py-3 sm:px-8 text-base backdrop-blur-[2px] hover:rounded-lg rounded-3xl focus:outline-none font-semibold flex-row gap-2 disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all text-neutral-100 bg-neutral-800 text-center duration-200 overflow-hidden;
+}
+.button-secondary {
+	@apply inline-flex items-center justify-center px-5 py-2 sm:py-3 sm:px-8 text-base backdrop-blur-[2px] hover:rounded-lg rounded-3xl focus:outline-none font-semibold flex-row gap-2 disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all text-neutral-100 bg-neutral-800 text-center duration-200 overflow-hidden;
+}
+.button-danger {
+	@apply inline-flex flex-row items-center justify-center gap-2 px-5 py-2 sm:py-3 sm:px-8 text-sm sm:text-base font-semibold transition-all duration-200 bg-red-500 text-neutral-100 hover:rounded-lg rounded-3xl focus:outline-none border border-red-600 disabled:border-red-400 disabled:cursor-not-allowed disabled:bg-red-300 overflow-hidden;
+}
+.button-material.round {
+	@apply inline-flex items-center justify-center text-base focus:outline-none font-semibold flex-row gap-2 transition-all text-neutral-100 rounded-full lg:p-4 md:p-3 p-2 hover:bg-neutral-800 overflow-hidden;
+}
+.button-sm {
+	@apply px-3 py-1 sm:py-1.5 sm:px-4 text-sm sm:text-base;
+}
+.link:not(.no-anim) {
+	@apply text-neutral-800 after:bg-neutral-800 cursor-pointer h-fit break-all after:absolute relative after:top-full after:h-px after:transition-all after:w-0 hover:after:w-full after:left-1/2 after:-translate-x-1/2 after:duration-200 after:ease-in;
+}
+.link.no-anim {
+	@apply underline;
+}
+
+h1 {
+	@apply text-4xl md:text-5xl lg:text-6xl font-semibold text-neutral-800;
+}
+h2 {
+	@apply text-3xl font-semibold text-neutral-800;
+}
+h3 {
+	@apply text-2xl font-semibold text-neutral-800;
+}
+h4 {
+	@apply text-xl font-medium text-neutral-800;
+}
+h5 {
+	@apply text-lg font-normal text-neutral-800;
+}
+h6 {
+	@apply text-base font-normal text-neutral-800;
+}
+p, label {
+	@apply block leading-6 font-normal font-['Mulish'] text-neutral-600 md:text-base text-sm;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+input[type=text],input[type=password], input[type=email] {
+	@apply border text-sm rounded-lg block w-full p-2.5 bg-neutral-200 border-neutral-300 placeholder-neutral-400 text-neutral-600 focus:ring-primary-500/50 focus:ring-2 focus:border-primary-500 focus:outline-none outline-none transition-all;
+}
+input[type=text].clear,input[type=password].clear, input[type=email].clear {
+	@apply border bg-white border-neutral-300 placeholder-neutral-400 text-neutral-600;
+}
+
+label {
+	@apply block text-neutral-600;
+}
+
+.card {
+	@apply px-6 py-8 rounded-lg shadow-shadow border bg-white border-neutral-200;
+}
