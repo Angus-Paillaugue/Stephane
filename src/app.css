@@ -32,7 +32,7 @@ body {
 	@apply inline-flex items-center justify-center px-5 py-2 sm:py-3 sm:px-8 text-base backdrop-blur-[2px] hover:rounded-lg rounded-3xl focus:outline-none font-semibold flex-row gap-2 disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all text-neutral-100 bg-neutral-800 text-center duration-200 overflow-hidden;
 }
 .button-secondary {
-	@apply inline-flex items-center justify-center px-5 py-2 sm:py-3 sm:px-8 text-base backdrop-blur-[2px] hover:rounded-lg rounded-3xl focus:outline-none font-semibold flex-row gap-2 disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all text-neutral-100 bg-neutral-800 text-center duration-200 overflow-hidden;
+	@apply inline-flex items-center justify-center px-5 py-2 sm:py-3 sm:px-8 text-base backdrop-blur-[2px] hover:rounded-lg rounded-3xl focus:outline-none font-semibold flex-row gap-2 disabled:bg-neutral-600 disabled:cursor-not-allowed transition-all text-neutral-800 bg-neutral-100 border border-neutral-300 text-center duration-200 overflow-hidden;
 }
 .button-danger {
 	@apply inline-flex flex-row items-center justify-center gap-2 px-5 py-2 sm:py-3 sm:px-8 text-sm sm:text-base font-semibold transition-all duration-200 bg-red-500 text-neutral-100 hover:rounded-lg rounded-3xl focus:outline-none border border-red-600 disabled:border-red-400 disabled:cursor-not-allowed disabled:bg-red-300 overflow-hidden;

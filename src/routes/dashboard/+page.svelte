@@ -83,7 +83,7 @@
                             <h6 class="font-medium">{formatDate(booking.start)}</h6>
                             <ul class="text-neutral-500 mt-1 space-y-1">
                                 <li class="flex flex-row">
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination=42%20Rue%20Victor%20Hugo%2040000%20Mont-de-Marsan" class="link no-anim flex flex-row gap-2 justify-center">
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination=42%20Rue%20Victor%20Hugo%2040000%20Mont-de-Marsan" target="_blank" class="link no-anim flex flex-row gap-2 justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline-block">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -132,7 +132,7 @@
                         <input type="text" name="email" id="email" value="{form?.formData?.email ?? user.email}" class="clear" placeholder="E-mail">
                     </label>
                 </div>
-                <button class="button-secondary button-sm mt-6" type="submit">
+                <button class="button-primary button-sm mt-6" type="submit">
                     Enregistrer
                 </button>
             </form>

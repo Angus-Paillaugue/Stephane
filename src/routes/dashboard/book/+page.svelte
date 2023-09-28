@@ -3,27 +3,81 @@
     import mapboxgl from "mapbox-gl/dist/mapbox-gl.js"
     import { onMount } from "svelte";
 
-    onMount(() => {
-        mapboxgl.accessToken = 'pk.eyJ1IjoiYXBhaWxsIiwiYSI6ImNreXI0dXVuczBxcGcycm1tcGJqdTMxaDMifQ.V4CpygVlur0d2ioTjVIWRg';
-        var map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/light-v11',
-            center: [-0.5009122524921432, 43.89311586402989],
-            zoom: 16,
-            cooperativeGestures: false,
-        });
-        
-        new mapboxgl.Marker({ color: 'black' }).setLngLat([-0.5009122524921432, 43.89311586402989]).addTo(map);
-        map.addControl(new mapboxgl.NavigationControl());
-    });
-
     export let data;
-
+    
     const { coiffeurs, prestations, ratings } = data;
-    let selectedPrestation = prestations[5];
+    let selectedPrestation = undefined;
     let ratingsTabIndex = 0;
     let ratingsOffset = 0;
     let mainTabsSmallScreenIndex = 0;
+    let calenderDate = new Date();
+
+    $: if(selectedPrestation) setTimeout(showCalendar);
+
+    onMount(() => {
+        try {
+            mapboxgl.accessToken = 'pk.eyJ1IjoiYXBhaWxsIiwiYSI6ImNreXI0dXVuczBxcGcycm1tcGJqdTMxaDMifQ.V4CpygVlur0d2ioTjVIWRg';
+            var map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/light-v11',
+                center: [-0.5009122524921432, 43.89311586402989],
+                zoom: 16,
+                cooperativeGestures: false,
+            });
+            
+            new mapboxgl.Marker({ color: 'black' }).setLngLat([-0.5009122524921432, 43.89311586402989]).addTo(map);
+            map.addControl(new mapboxgl.NavigationControl());
+        }catch(_){}
+    });
+
+    function showCalendar() {
+        let month = calenderDate.getMonth();
+        let year = calenderDate.getFullYear()
+        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        let today = new Date();
+        let firstDay = (new Date(year, month)).getDay();
+        let tbl = document.getElementById(`modalCalendar`);
+        tbl.innerHTML = "";
+        document.getElementById(`monthAndYear`).innerHTML = months[month] + " " + year;
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+            let row = document.createElement("tr");
+            for (let j = 0; j < 7; j++) {
+                if (i === 0 && j < firstDay) {
+                    let cell = document.createElement("td");
+                    let cellText = document.createTextNode("");
+                    cell.appendChild(cellText);
+                    row.appendChild(cell);
+                }else if (date > daysInMonth(month, year)) {
+                    break;
+                }else {
+                    let cell = document.createElement("td");
+                    cell.classList.add("border");
+                    cell.classList.add("border-neutral-400");
+                    cell.classList.add("text-center");
+                    let cellText = document.createTextNode(date);
+                    let yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+                    if(new Date(`${month+1}/${date}/${year}`) <= yesterday){
+                        cell.classList.add("bg-neutral-400");
+                        cell.classList.add("text-neutral-100");
+                        cell.appendChild(cellText);
+                    }else {
+                        let button = document.createElement("button");
+                        button.classList.add("w-full");
+                        button.classList.add("text-neutral-800");
+                        cell.appendChild(button);
+                        button.appendChild(cellText);
+                    }
+                    row.appendChild(cell);
+                    date++;
+                }
+            }
+            tbl.appendChild(row);
+        }
+    }
+
+    const daysInMonth = (iMonth, iYear) => {return 32 - new Date(iYear, iMonth, 32).getDate();}
 </script>
 
 {#if selectedPrestation !== undefined}
@@ -45,35 +99,78 @@
                 </div>
 
                 <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 w-full gap-4">
-                    <li>
-                        <label for="sansPreference" class="inline-flex items-center justify-between w-full p-5 bg-white border border-neutral-200 rounded-lg cursor-pointer group-checked:border-blue-600 group-checked:text-blue-600 hover:bg-neutral-100">
+                    <li class="h-full relative">
+                        <input type="radio" name="withWho" value="sansPreference" id="sansPreference" class="peer hidden group" checked>
+                        <label for="sansPreference" class="inline-flex items-center justify-between w-full p-5 pr-12 bg-white border border-neutral-200 rounded-lg cursor-pointer peer-checked:border-neutral-800 hover:bg-neutral-100 h-full">
                             <div class="flex flex-row gap-2 items-center">
-                                <div class="w-8 h-8 rounded-full flex flex-col items-center justify-center bg-neutral-800 text-neutral-100">S</div>
                                 <p>Sans préférence</p>
                             </div>
-                            <input type="radio" name="withWho" value="sansPreference" id="sansPreference" class="group" checked>
                         </label>
+                        <span class="w-4 h-4 bg-transparent border-2 before:bg-transparent peer-checked:before:bg-neutral-800 before:w-2 before:h-2 flex flex-col items-center justify-center before:rounded-full border-neutral-300 peer-checked:border-neutral-800 rounded-full absolute top-1/2 -translate-y-1/2 right-5"></span>
                     </li>
                     {#each coiffeurs as coiffeur}
-                        <li>
-                            <label for="{coiffeur.prenom}" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-neutral-200 rounded-lg cursor-pointer group-checked:border-blue-600 group-checked:text-blue-600 hover:bg-neutral-100">
+                        <li class="h-full relative">
+                            <input type="radio" name="withWho" value="{coiffeur.prenom}" id="{coiffeur.prenom}" class="peer hidden group">
+                            <label for="{coiffeur.prenom}" class="inline-flex items-center justify-between w-full px-5 py-4 pr-12 bg-white border border-neutral-200 rounded-lg cursor-pointer peer-checked:border-neutral-800 hover:bg-neutral-100 h-full">
                                 <div class="flex flex-row gap-2 items-center">
                                     <div class="w-8 h-8 rounded-full flex flex-col items-center justify-center bg-neutral-800 text-neutral-100">{coiffeur.prenom[0]}</div>
                                     <p>{coiffeur.prenom}</p>
                                 </div>
-                                <input type="radio" name="withWho" value="{coiffeur.prenom}" id="{coiffeur.prenom}" class="group">
                             </label>
+                            <span class="w-4 h-4 bg-transparent border-2 before:bg-transparent peer-checked:before:bg-neutral-800 before:w-2 before:h-2 flex flex-col items-center justify-center before:rounded-full border-neutral-300 peer-checked:border-neutral-800 rounded-full absolute top-1/2 -translate-y-1/2 right-5"></span>
                         </li>
                     {/each}
                 </ul>
             </div>
         </div>
+
+        <div>
+            <h4><span class="text-primary-700">2.</span> Choix de la date & heure</h4>
+            <div class="card">
+                <div class="flex flex-col gap-2 justify-center">
+                    <table class="border border-neutral-300">
+                        <thead class="border-0 border-b border-gray-300 text-neutral-500">
+                            <tr>
+                                <th>Lundi</th>
+                                <th>Mardi</th>
+                                <th>Mercredi</th>
+                                <th>Jeudi</th>
+                                <th>Vendredi</th>
+                                <th>Samedi</th>
+                                <th>Dimanche</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalCalendar"></tbody>
+                    </table>
+                    <div class="w-full flex flex-row justify-between gap-2 mt-2 items-center">
+                        <button class="button-primary" on:click={() => {
+                            calenderDate.setMonth(calenderDate.getMonth()-1);
+                            showCalendar();
+                        }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+                        <!-- svelte-ignore a11y-missing-content -->
+                        <h3 class="text-2xl font-sans font-semibold dark:text-gray-300 text-gray-500" id="monthAndYear"></h3>
+                        <button class="button-primary" on:click={() => {
+                            calenderDate.setMonth(calenderDate.getMonth()+1);
+                            showCalendar();
+                        }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 {:else}
-    <header class="w-full md:hidden grid grid-cols-3 bg-white">
-        <button class="no-scale border-b-2 py-4 {mainTabsSmallScreenIndex === 0 ? "border-neutral-800" : "border-transparent"}" on:click={() => {mainTabsSmallScreenIndex = 0}}>Prendre RDV</button>
-        <button class="no-scale border-b-2 py-4 {mainTabsSmallScreenIndex === 1 ? "border-neutral-800" : "border-transparent"}" on:click={() => {mainTabsSmallScreenIndex = 1}}>Avis</button>
-        <button class="no-scale border-b-2 py-4 {mainTabsSmallScreenIndex === 2 ? "border-neutral-800" : "border-transparent"}" on:click={() => {mainTabsSmallScreenIndex = 2}}>À-propos</button>
+    <header class="w-full md:hidden grid grid-cols-3 bg-white sticky top-0 z-50">
+        <button class="no-scale py-4 {mainTabsSmallScreenIndex === 0 ? "border-b-2 border-neutral-800" : "border-b border-neutral-200"}" on:click={() => {mainTabsSmallScreenIndex = 0}}>Prendre RDV</button>
+        <button class="no-scale py-4 {mainTabsSmallScreenIndex === 1 ? "border-b-2 border-neutral-800" : "border-b border-neutral-200"}" on:click={() => {mainTabsSmallScreenIndex = 1}}>Avis</button>
+        <button class="no-scale py-4 {mainTabsSmallScreenIndex === 2 ? "border-b-2 border-neutral-800" : "border-b border-neutral-200"}" on:click={() => {mainTabsSmallScreenIndex = 2}}>À-propos</button>
     </header>
     <section class="grid lg:grid-cols-3 grid-cols-1 gap-6 max-w-screen-xl mx-auto w-full lg:p-6 p-2 mt-5">
         <div class="flex flex-col gap-6 lg:col-span-2 max-lg:order-2">
@@ -192,8 +289,8 @@
         <div class="flex flex-col gap-6 {mainTabsSmallScreenIndex !== 1 && "max-md:hidden"}">
             <div class="rounded-lg shadow-shadow border bg-white border-neutral-200">
                 <div class="grid grid-cols-2 w-full">
-                    <button class="no-scale border-b-2 py-4 {ratingsTabIndex === 0 ? "border-neutral-800" : "border-transparent"}" on:click={() => {ratingsTabIndex = 0}}>Note globale</button>
-                    <button class="no-scale border-b-2 py-4 {ratingsTabIndex === 1 ? "border-neutral-800" : "border-transparent"}" on:click={() => {ratingsTabIndex = 1}}>Avis</button>
+                    <button class="no-scale border-b-2 py-4 {ratingsTabIndex === 0 ? "border-neutral-800" : "border-neutral-200"}" on:click={() => {ratingsTabIndex = 0}}>Note globale</button>
+                    <button class="no-scale border-b-2 py-4 {ratingsTabIndex === 1 ? "border-neutral-800" : "border-neutral-200"}" on:click={() => {ratingsTabIndex = 1}}>Avis</button>
                 </div>
                 <div class="px-6 py-8 ">
                     {#if ratingsTabIndex === 0}
@@ -266,7 +363,7 @@
                         </li>
                         <li class="border-b border-neutral-200 flex flex-row justify-between items-center py-2">
                             <p class="text-lg {new Date().getDay() === 6 && "font-bold"}">Samedi</p>
-                            <p class="text-lg {new Date().getDay() === 6 ? "font-bold" : "font-semibold"}">07:30 - 18:00</p>
+                            <p class="text-lg {new Date().getDay() === 6 ? "font-bold" : "font-semibold"}">07:30 - 17:00</p>
                         </li>
                         <li class="flex flex-row justify-between items-center pt-2">
                             <p class="text-lg {new Date().getDay() === 7 && "font-bold"}">Dimanche</p>
