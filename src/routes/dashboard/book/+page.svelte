@@ -11,6 +11,8 @@
     let ratingsOffset = 0;
     let mainTabsSmallScreenIndex = 0;
     let calenderDate = new Date();
+    let monthAndYear;
+    let modalCalendar;
 
     $: if(selectedPrestation) setTimeout(showCalendar);
 
@@ -36,9 +38,8 @@
         const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         let today = new Date();
         let firstDay = (new Date(year, month)).getDay();
-        let tbl = document.getElementById(`modalCalendar`);
-        tbl.innerHTML = "";
-        document.getElementById(`monthAndYear`).innerHTML = months[month] + " " + year;
+        modalCalendar.innerHTML = "";
+        monthAndYear.innerHTML = months[month] + " " + year;
         let date = 1;
         for (let i = 0; i < 6; i++) {
             let row = document.createElement("tr");
@@ -73,7 +74,7 @@
                     date++;
                 }
             }
-            tbl.appendChild(row);
+            modalCalendar.appendChild(row);
         }
     }
 
@@ -140,7 +141,7 @@
                                 <th>Dimanche</th>
                             </tr>
                         </thead>
-                        <tbody id="modalCalendar"></tbody>
+                        <tbody bind:this={modalCalendar}></tbody>
                     </table>
                     <div class="w-full flex flex-row justify-between gap-2 mt-2 items-center">
                         <button class="button-primary" on:click={() => {
@@ -152,7 +153,7 @@
                             </svg>
                         </button>
                         <!-- svelte-ignore a11y-missing-content -->
-                        <h3 class="text-2xl font-sans font-semibold dark:text-gray-300 text-gray-500" id="monthAndYear"></h3>
+                        <h3 class="text-2xl font-sans font-semibold dark:text-gray-300 text-gray-500" bind:this={monthAndYear}></h3>
                         <button class="button-primary" on:click={() => {
                             calenderDate.setMonth(calenderDate.getMonth()+1);
                             showCalendar();
@@ -280,7 +281,7 @@
                 <h4 class="mt-5">À-propos</h4>
                 <div class="card space-y-4">
                     <p><b>Installé non loin du parc Jean Rameau, le salon de coiffure Stéphane Paillaugue est un havre de paix, au cœur de Mont-de-Marsan. Et dans ce salon de coiffure bio, les plantes sont forcément à l’honneur : vous les retrouverez dans le joli patio végétalisé, mais aussi dans vos cheveux avec des colorations 100 % naturelles !</b></p>
-                    <p>Les habitué.e.s vous le diront : on se sent bien chez Stéphane Paillaugue sitôt la porte poussée. L’ambiance zen y est certainement pour quelque chose, mais également l’accueil sympathique de son équipe de coiffeurs : Justin, Maxime et Anaïs.</p>
+                    <p>Les habitué.e.s vous le diront : on se sent bien chez Stéphane Paillaugue sitôt la porte poussée. L’ambiance zen y est certainement pour quelque chose, mais également l’accueil sympathique de son équipe de coiffeurs : {coiffeurs.map(el => el.prenom).join(", ")}.</p>
                     <p>Vos cheveux risquent aussi de vous dire merci après leur passage dans ce salon de coiffure : ici exit les produits chimiques, toutes les colorations sont végétales. Un peu de henné, d’hibiscus, de brou de noix, un soupçon d’indigo, une pincée de brahmi… Comme un magicien, Stéphane mélange les poudres colorées avec dextérité pour préparer la nuance de vos rêves. Les soins utilisés sont, bien sûr, eux aussi naturels. L’adresse a d’ailleurs créé son propre shampoing solide nommé « Esprit végétal ».</p>
                     <p>Les autres atouts du lieu : le fauteuil massant… et les prix raisonnables pour ces soins confectionnés sur mesure. Réservez votre rendez-vous !</p>
                 </div>
